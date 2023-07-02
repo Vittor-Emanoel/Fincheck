@@ -47,6 +47,7 @@ export class TransactionsController {
       month,
       year,
       bankAccountId,
+      type,
     });
   }
 
