@@ -6,40 +6,51 @@ import {
   Put,
   Param,
   Delete,
+  ParseUUIDPipe,
+  HttpCode,
+  HttpStatus,
 } from "@nestjs/common";
-import { BankAccountsService } from "./bank-accounts.service";
+import { BankAccountsService } from "./services/bank-accounts.service";
 import { CreateBankAccountDto } from "./dto/create-bank-account.dto";
 import { UpdateBankAccountDto } from "./dto/update-bank-account.dto";
+import { ActiveUserId } from "src/shared/decorators/ActiveUserid";
 
 @Controller("bank-accounts")
 export class BankAccountsController {
   constructor(private readonly bankAccountsService: BankAccountsService) {}
 
   @Post()
-  create(@Body() createBankAccountDto: CreateBankAccountDto) {
-    return this.bankAccountsService.create(createBankAccountDto);
+  create(
+    @Body() createBankAccountDto: CreateBankAccountDto,
+    @ActiveUserId() userId: string
+  ) {
+    return this.bankAccountsService.create(userId, createBankAccountDto);
   }
 
   @Get()
-  findAll() {
-    return this.bankAccountsService.findAll();
+  findAllByUserId(@ActiveUserId() userId: string) {
+    return this.bankAccountsService.findAllByUserId(userId);
   }
 
-  @Get(":id")
-  findOne(@Param("id") id: string) {
-    return this.bankAccountsService.findOne(+id);
-  }
-
-  @Put(":id")
+  @Put(":bankAccountId")
   update(
-    @Param("id") id: string,
+    @ActiveUserId() userId: string,
+    @Param("bankAccountId", ParseUUIDPipe) bankAccountId: string,
     @Body() updateBankAccountDto: UpdateBankAccountDto
   ) {
-    return this.bankAccountsService.update(+id, updateBankAccountDto);
+    return this.bankAccountsService.update(
+      userId,
+      bankAccountId,
+      updateBankAccountDto
+    );
   }
 
-  @Delete(":id")
-  remove(@Param("id") id: string) {
-    return this.bankAccountsService.remove(+id);
+  @Delete(":bankAccountId")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  remove(
+    @ActiveUserId() userId: string,
+    @Param("bankAccountId", ParseUUIDPipe) bankAccountId: string
+  ) {
+    return this.bankAccountsService.remove(userId, bankAccountId);
   }
 }
