@@ -5,8 +5,6 @@ interface LogoProps {
 export function Logo({ className }: LogoProps) {
   return (
     <svg
-      width="106"
-      height="24"
       viewBox="0 0 106 24"
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
