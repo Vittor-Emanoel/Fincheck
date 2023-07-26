@@ -1,4 +1,4 @@
-# FINCHECK - CONTROLE DE FINANÇAS PESSOAIS
+# FINCHECK - Controle suas finanças
 
 
 <img src="./assets/preview.png" alt="preview">
