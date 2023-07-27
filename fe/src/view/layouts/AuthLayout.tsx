@@ -1,3 +1,4 @@
+import { Outlet } from "react-router-dom";
 import illustration from "../../assets/images/illustration.png";
 import { Logo } from "../components/Logo";
 
@@ -5,13 +6,15 @@ export function AuthLayout() {
   return (
     <div className="flex w-full h-full">
       {/* //left */}
-      <div className=" w-1/2 h-full flex items-center justify-center flex-col gap-16">
+      <div className=" w-full h-full flex items-center justify-center flex-col gap-16 lg:w-1/2">
         <Logo className="h-6 text-gray-500 " />
 
-        <div className=""></div>
+        <div className="w-full max-w-[504px] px-8 ">
+          <Outlet />
+        </div>
       </div>
       {/* //right */}
-      <div className=" w-1/2 h-full flex justify-center items-center p-8 relative">
+      <div className=" w-1/2 h-full justify-center items-center p-8 relative hidden lg:flex ">
         <img
           src={illustration}
           className="object-cover w-full h-full max-w-[656px] max-h-[960px] select-none rounded-[32px]"

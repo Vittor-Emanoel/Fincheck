@@ -176,6 +176,9 @@ export default {
         900: '#D9480F',
       },
     }},
+    fontFamily: {
+      'DM Sans' : ['DM Sans', 'sans-serif']
+    }
   },
   plugins: [],
 }
