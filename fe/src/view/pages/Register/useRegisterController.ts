@@ -41,11 +41,11 @@ export function useRegisterController() {
       const { accessToken } = await mutateAsync(data);
       console.log(accessToken);
     } catch {
-      toast("Ocorreu um erro ao criar sua conta!");
+      toast.error("Ocorreu um erro ao criar sua conta!");
     }
   });
 
   console.log({ isLoading });
 
-  return { handleSubmit, register, errors };
+  return { handleSubmit, register, errors, isLoading };
 }

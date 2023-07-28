@@ -4,7 +4,7 @@ import { Button } from "../../components/Button";
 import { useRegisterController } from "./useRegisterController";
 
 export function Register() {
-  const { handleSubmit, register, errors } = useRegisterController();
+  const { handleSubmit, register, errors, isLoading } = useRegisterController();
 
   return (
     <div>
@@ -45,7 +45,11 @@ export function Register() {
           error={errors.password?.message}
         />
 
-        <Button type="submit" className="mt-2 bg-teal-900">
+        <Button
+          type="submit"
+          className="mt-2 bg-teal-900"
+          isLoading={isLoading}
+        >
           Entrar
         </Button>
       </form>
