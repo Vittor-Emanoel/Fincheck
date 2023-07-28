@@ -30,7 +30,6 @@ export function useRegisterController() {
   });
 
   const { mutateAsync, isLoading } = useMutation({
-    mutationKey: ["signup"],
     mutationFn: async (data: SignupParams) => {
       return authService.signup(data);
     },
@@ -38,14 +37,11 @@ export function useRegisterController() {
 
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     try {
-      const { accessToken } = await mutateAsync(data);
-      console.log(accessToken);
+      await mutateAsync(data);
     } catch {
       toast.error("Ocorreu um erro ao criar sua conta!");
     }
   });
-
-  console.log({ isLoading });
 
   return { handleSubmit, register, errors, isLoading };
 }
