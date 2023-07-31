@@ -9,8 +9,6 @@ export const httpClient = axios.create({
 httpClient.interceptors.request.use(async (config) => {
   const accessToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
 
-  await sleep(500);
-
   if (accessToken) {
     config.headers.Authorization = `Bearer ${accessToken}`;
   }
@@ -19,7 +17,7 @@ httpClient.interceptors.request.use(async (config) => {
 });
 
 httpClient.interceptors.response.use(async (data) => {
-  await sleep(1500);
+  await sleep(500);
 
   return data;
 });

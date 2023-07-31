@@ -3,7 +3,7 @@ import { localStorageKeys } from "../config/localStorageKeys";
 import { useQuery } from "@tanstack/react-query";
 import { usersService } from "../services/usersService";
 import { toast } from "react-hot-toast/headless";
-import { PageLoader } from "../../view/components/PageLoader";
+import { LaunchScreen } from "../../view/components/LaunchScreen";
 
 interface AuthContextValue {
   signedIn: boolean;
@@ -48,15 +48,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isError, signout]);
 
-  if (isFetching) {
-    return <PageLoader />;
-  }
-
   return (
     <AuthContext.Provider
       value={{ signedIn: isSuccess && signedIn, signin, signout }}
     >
-      {children}
+      <LaunchScreen isLoading={isFetching} />
+
+      {!isFetching && children}
     </AuthContext.Provider>
   );
 }
