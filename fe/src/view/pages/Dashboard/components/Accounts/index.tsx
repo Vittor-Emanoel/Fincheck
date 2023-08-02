@@ -2,7 +2,7 @@ import "swiper/css";
 import { EyeIcon } from "../../../../components/icons/EyeIcon";
 import { AccountCard } from "./AccountCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { AccountsSliderNavigation } from "./AccountsSliderNavigation";
+import { AccountsSliderNavigation } from "./SliderNavigation";
 import { useAccountController } from "./useAccountsController";
 
 export function Accounts() {

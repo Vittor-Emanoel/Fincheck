@@ -11,7 +11,7 @@ export function Dashboard() {
         <UserMenu />
       </header>
 
-      <main className="flex-1 flex flex-col md:flex-row gap-4 ">
+      <main className="flex-1 flex flex-col md:flex-row gap-4 max-h-full">
         <div className="w-full md:w-1/2  ">
           <Accounts />
         </div>
