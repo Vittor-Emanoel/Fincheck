@@ -12,12 +12,13 @@ import { PlusIcon } from "@radix-ui/react-icons";
 export function Accounts() {
   const {
     sliderState,
-    setSliderState,
     widthWidth,
     accounts,
     areValuesVisible,
-    toggleValuesVisibility,
     isLoading,
+    setSliderState,
+    toggleValuesVisibility,
+    openNewAccountModal,
   } = useAccountController();
 
   return (
@@ -62,7 +63,10 @@ export function Accounts() {
                   </strong>
                 </div>
 
-                <button className="mt-4 h-[204px] rounded-2xl border-2 border-dashed border-teal-600 flex flex-col items-center justify-center gap-4 text-white hover:bg-teal-950/5 transition-colors">
+                <button
+                  className="mt-4 h-[204px] rounded-2xl border-2 border-dashed border-teal-600 flex flex-col items-center justify-center gap-4 text-white hover:bg-teal-950/5 transition-colors"
+                  onClick={openNewAccountModal}
+                >
                   <div className="w-11 h-11 rounded-full border-2 border-dashed border-white flex  items-center justify-center">
                     <PlusIcon className="w-6 h-6" />
                   </div>

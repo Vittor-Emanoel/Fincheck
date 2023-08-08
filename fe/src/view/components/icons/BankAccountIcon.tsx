@@ -45,7 +45,7 @@ export function BankAccountIcon() {
         height="42"
         rx="21"
         stroke="white"
-        stroke-width="2"
+        strokeWidth="2"
       />
     </svg>
   );
