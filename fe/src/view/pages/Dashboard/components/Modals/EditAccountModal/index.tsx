@@ -5,24 +5,49 @@ import { Input } from "../../../../../components/Input";
 import { InputCurrency } from "../../../../../components/InputCurrency";
 import { Modal } from "../../../../../components/Modal";
 import { Select } from "../../../../../components/Select";
-import { useNewAccountModalController } from "./useNewAccountModalController";
+import { useEditAccountModalController } from "./useEditAccountModalController";
+import { TrashIcon } from "../../../../../components/icons/Trash";
+import { ConfirmDeleteModal } from "../../../../../components/ConfirmDeleteModal";
 
-export function NewAccountModal() {
+export function EditAccountModal() {
   const {
-    isNewAccountModalOpen,
+    isEditAccountModalOpen,
     errors,
     control,
     isLoading,
-    closeNewAccountModal,
+    isLoadingDelete,
+    isDeleteModalOpen,
+    closeEditAccountModal,
     register,
     handleSubmit,
-  } = useNewAccountModalController();
+    handleOpenDeleteModal,
+    handleCloseDeleteModal,
+    handleDeleteAccount,
+  } = useEditAccountModalController();
+
+  if (isDeleteModalOpen) {
+    return (
+      <ConfirmDeleteModal
+        isLoading={isLoadingDelete}
+        onConfirm={handleDeleteAccount}
+        title=" Tem certeza que deseja excluir esta despesa?"
+        description="Ao excluir a conta, também serão excluídos todos os registros de
+        receita e despesas relacionados."
+        onClose={handleCloseDeleteModal}
+      />
+    );
+  }
 
   return (
     <Modal
-      title="Nova conta"
-      open={isNewAccountModalOpen}
-      onClose={closeNewAccountModal}
+      title="Editar conta"
+      open={isEditAccountModalOpen}
+      onClose={closeEditAccountModal}
+      rightAction={
+        <button onClick={handleOpenDeleteModal}>
+          <TrashIcon className="w-6 h-6 text-red-900" />
+        </button>
+      }
     >
       <form onSubmit={handleSubmit}>
         <div>
@@ -32,7 +57,7 @@ export function NewAccountModal() {
           <div className="flex items-center gap-2">
             <span className="text-gray-600 tracking-[-0.5px] text-lg">R$</span>
             <Controller
-              defaultValue="0"
+              defaultValue={0}
               control={control}
               name="initialBalance"
               render={({ field: { onChange, value } }) => (
@@ -97,7 +122,7 @@ export function NewAccountModal() {
         </div>
 
         <Button type="submit" className="w-full mt-6" isLoading={isLoading}>
-          Criar
+          Salvar
         </Button>
       </form>
     </Modal>

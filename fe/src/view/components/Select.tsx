@@ -11,6 +11,8 @@ import { useState } from "react";
 interface SelectProps {
   className?: string;
   error?: string;
+  onChange?(value: string): void;
+  value?: string;
   placeholder?: string;
   options: {
     value: string;
@@ -23,11 +25,14 @@ export function Select({
   placeholder,
   options,
   error,
+  onChange,
+  value,
 }: SelectProps) {
-  const [selectedValue, setSelectedValue] = useState("");
+  const [selectedValue, setSelectedValue] = useState(value ?? "");
 
   function handleSelect(value: string) {
     setSelectedValue(value);
+    onChange?.(value);
   }
 
   return (
@@ -42,7 +47,7 @@ export function Select({
         >
           {placeholder}
         </label>
-        <RdxSelect.Root onValueChange={handleSelect}>
+        <RdxSelect.Root value={value} onValueChange={handleSelect}>
           <RdxSelect.Trigger
             className={cn(
               "bg-white w-full relative rounded-lg border text-left border-gray-500 px-3 h-[52px] text-gray-800  pt-4 focus:border-gray-800 transition-all outline-none",
