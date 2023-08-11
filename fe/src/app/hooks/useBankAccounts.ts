@@ -5,6 +5,7 @@ export function useBankAccounts() {
   const { data, isFetching } = useQuery({
     queryKey: ["bankAccounts"],
     queryFn: bankAccountsService.getAll,
+    staleTime: Infinity,
   });
 
   return {

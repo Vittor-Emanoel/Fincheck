@@ -44,6 +44,7 @@ export function useNewAccountModalController() {
       });
 
       queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+
       toast.success("Conta foi cadastrada com sucesso!");
       closeNewAccountModal();
       reset();
