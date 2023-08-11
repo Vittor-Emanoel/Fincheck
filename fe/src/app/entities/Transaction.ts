@@ -1,8 +1,12 @@
 export interface Transaction {
   id: string;
   name: string;
-  initialBalance: number;
-  type: "INVESTMENT" | "CHECKING" | "CASH";
-  color: string;
-  currentBalance: number;
+  value: number;
+  date: string;
+  type: "INCOME" | "EXPENSE";
+  category?: {
+    id: string;
+    name: string;
+    icon: string;
+  };
 }
