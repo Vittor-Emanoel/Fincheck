@@ -24,6 +24,7 @@ export function Transactions() {
     HandleOpenFiltersModal,
     HandleCloseFiltersModal,
     handleChangeFilters,
+    handleApplyFilters,
   } = useTransactionsController();
 
   const hasTransactions = transactions.length > 0;
@@ -41,10 +42,14 @@ export function Transactions() {
           <FiltersModal
             open={isFiltersModalOpen}
             onClose={HandleCloseFiltersModal}
+            onApplyFilter={handleApplyFilters}
           />
           <header>
             <div className="flex items-end justify-between">
-              <TransactionTypeDropdown onSelect={handleChangeFilters("type")} />
+              <TransactionTypeDropdown
+                onSelect={handleChangeFilters("type")}
+                selectedType={filters.type}
+              />
 
               <button onClick={HandleOpenFiltersModal}>
                 <FilterIcon />
