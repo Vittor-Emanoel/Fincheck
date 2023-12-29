@@ -6,7 +6,7 @@
   "private": true,
   "license": "UNLICENSED",
   "scripts": {
-    "build:swc": "npx swc --out-dir dist -w src",
+    "build:swc": "npx swc --out-dir dist src",
     "vercel-build": "npx prisma migrate deploy",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "node dist/main",
