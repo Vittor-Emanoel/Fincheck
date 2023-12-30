@@ -1,14 +1,14 @@
-import { createContext, useCallback, useState, useEffect } from "react";
-import { localStorageKeys } from "../config/localStorageKeys";
 import { useQuery } from "@tanstack/react-query";
-import { usersService } from "../services/usersService";
+import { createContext, useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast/headless";
 import { LaunchScreen } from "../../view/components/LaunchScreen";
+import { localStorageKeys } from "../config/localStorageKeys";
 import { User } from "../entities/User";
+import { usersService } from "../services/usersService";
 
 interface AuthContextValue {
   signedIn: boolean;
-  user: User | undefined;
+  user?: User;
   signin(accessToken: string): void;
   signout(): void;
 }
