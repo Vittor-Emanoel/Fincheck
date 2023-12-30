@@ -8,7 +8,7 @@ import { usersService } from "../services/usersService";
 
 interface AuthContextValue {
   signedIn: boolean;
-  user: User | undefined;
+  user?: User;
   signin(accessToken: string): void;
   signout(): void;
 }
@@ -50,9 +50,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, [isError, signout]);
 
+  console.log(data);
+
   return (
     <AuthContext.Provider
-      value={{ signedIn: isSuccess && signedIn, user: data, signin, signout }}
+      value={{
+        signedIn: isSuccess && signedIn,
+        user: data,
+        signin,
+        signout,
+      }}
     >
       <LaunchScreen isLoading={isFetching} />
 

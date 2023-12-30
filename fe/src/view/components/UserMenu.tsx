@@ -6,11 +6,7 @@ import { DropdownMenu } from "./DropdownMenu";
 export function UserMenu() {
   const { user, signout } = useAuth();
 
-  console.log(user);
-
-  const initialLetters = getNameInitialLetters(user?.name ?? " ");
-
-  console.log(initialLetters);
+  const initialLetters = getNameInitialLetters(user?.user?.name ?? " ");
 
   return (
     <DropdownMenu.Root>
