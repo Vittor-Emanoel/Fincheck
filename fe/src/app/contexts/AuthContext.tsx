@@ -3,12 +3,13 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast/headless";
 import { LaunchScreen } from "../../view/components/LaunchScreen";
 import { localStorageKeys } from "../config/localStorageKeys";
-import { User } from "../entities/User";
 import { usersService } from "../services/usersService";
+
+import { UserData } from "../entities/User";
 
 interface AuthContextValue {
   signedIn: boolean;
-  user?: User;
+  user?: UserData;
   signin(accessToken: string): void;
   signout(): void;
 }
@@ -49,8 +50,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       signout();
     }
   }, [isError, signout]);
-
-  console.log(data);
 
   return (
     <AuthContext.Provider
