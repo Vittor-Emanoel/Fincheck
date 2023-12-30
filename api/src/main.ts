@@ -11,6 +11,6 @@ async function bootstrap() {
     origin: "*",
   });
 
-  await app.listen(3333);
+  await app.listen(80);
 }
 bootstrap();
