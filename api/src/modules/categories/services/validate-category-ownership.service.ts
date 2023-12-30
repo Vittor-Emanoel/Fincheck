@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { CategoriesRepository } from "src/shared/database/repositories/categories.repositories";
-
+import { CategoriesRepository } from "../../../shared/database/repositories/categories.repositories";
 @Injectable()
 export class ValidateCategoryOwnershipService {
   constructor(private readonly categoriesRepo: CategoriesRepository) {}

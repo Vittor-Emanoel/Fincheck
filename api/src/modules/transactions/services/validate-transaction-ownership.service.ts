@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from "@nestjs/common";
-import { CategoriesRepository } from "src/shared/database/repositories/categories.repositories";
-import { TransactionsRepository } from "src/shared/database/repositories/transactions.repositories";
+
+import { TransactionsRepository } from "../../../shared/database/repositories/transactions.repositories";
 
 @Injectable()
 export class ValidateTransactionOwnershipService {
