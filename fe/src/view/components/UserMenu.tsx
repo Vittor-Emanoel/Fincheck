@@ -8,7 +8,7 @@ export function UserMenu() {
 
   console.log(user);
 
-  const initialLetters = getNameInitialLetters(user?.name ?? "dsdsa");
+  const initialLetters = getNameInitialLetters(user?.name ?? " ");
 
   console.log(initialLetters);
 

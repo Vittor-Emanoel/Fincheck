@@ -8,7 +8,7 @@ import { usersService } from "../services/usersService";
 
 interface AuthContextValue {
   signedIn: boolean;
-  user?: User;
+  user: User | undefined;
   signin(accessToken: string): void;
   signout(): void;
 }

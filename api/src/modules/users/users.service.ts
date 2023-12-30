@@ -6,14 +6,13 @@ export class UsersService {
   constructor(private readonly usersRepo: UsersRepository) {}
 
   async getUserById(userId: string) {
-    const user = await this.usersRepo.findUnique({
+    return await this.usersRepo.findUnique({
       where: { id: userId },
       select: {
+        id: true,
         name: true,
         email: true,
       },
     });
-
-    return user;
   }
 }
