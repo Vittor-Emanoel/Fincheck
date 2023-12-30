@@ -8,8 +8,6 @@ import { TransactionsModule } from "./modules/transactions/transactions.module";
 import { UsersModule } from "./modules/users/users.module";
 import { DatabaseModule } from "./shared/database/database.module";
 
-console.log("build");
-
 @Module({
   imports: [
     UsersModule,
