@@ -49,7 +49,7 @@ export class TransactionsService {
       type?: TransactionType;
     }
   ) {
-    return this.transactionsRepo.findMany({
+    await this.transactionsRepo.findMany({
       where: {
         userId,
         bankAccountId: filters.bankAccountId,
