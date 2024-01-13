@@ -4,12 +4,12 @@ import "dotenv/config";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    origin: "https://fincheck-cloud.vercel.app/",
+    origin: "https://fincheck-cloud.vercel.app",
   });
 
   await app.listen(3333);
