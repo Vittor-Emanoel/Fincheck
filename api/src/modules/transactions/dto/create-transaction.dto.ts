@@ -6,9 +6,8 @@ import {
   IsPositive,
   IsString,
   IsUUID,
-  isEnum,
-} from "class-validator";
-import { TransactionType } from "../entities/Transaction";
+} from 'class-validator';
+import { TransactionType } from '../entities/Transaction';
 
 export class CreateTransactionDto {
   @IsString()
