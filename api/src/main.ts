@@ -4,12 +4,9 @@ import "dotenv/config";
 import { AppModule } from "./app.module";
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   app.useGlobalPipes(new ValidationPipe());
-  app.enableCors({
-    origin: "*",
-  });
 
   await app.listen(3333);
 }
