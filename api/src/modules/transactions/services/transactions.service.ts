@@ -40,7 +40,7 @@ export class TransactionsService {
     });
   }
 
-  findAllByUserId(
+  async findAllByUserId(
     userId: string,
     filters: {
       month: number;
