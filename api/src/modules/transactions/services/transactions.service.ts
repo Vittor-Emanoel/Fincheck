@@ -1,12 +1,11 @@
-import { Injectable } from "@nestjs/common";
-import { ValidateBankAccountOwnershipService } from "../../bank-accounts/services/validate-bank-account-ownership.service";
-import { ValidateCategoryOwnershipService } from "../../categories/services/validate-category-ownership.service";
-
-import { TransactionsRepository } from "../../../shared/database/repositories/transactions.repositories";
-import { CreateTransactionDto } from "../dto/create-transaction.dto";
-import { UpdateTransactionDto } from "../dto/update-transaction.dto";
-import { TransactionType } from "../entities/Transaction";
-import { ValidateTransactionOwnershipService } from "./validate-transaction-ownership.service";
+import { Injectable } from '@nestjs/common';
+import { ValidateBankAccountOwnershipService } from 'src/modules/bank-accounts/services/validate-bank-account-ownership.service';
+import { ValidateCategoryOwnershipService } from 'src/modules/categories/services/validate-category-ownership.service';
+import { TransactionsRepository } from 'src/shared/database/repositories/transactions.repository';
+import { CreateTransactionDto } from '../dto/create-transaction.dto';
+import { UpdateTransactionDto } from '../dto/update-transaction.dto';
+import { TransactionType } from '../entities/Transaction';
+import { ValidateTransactionOwnershipService } from './validate-transaction-ownership.service';
 
 @Injectable()
 export class TransactionsService {
@@ -14,7 +13,7 @@ export class TransactionsService {
     private readonly transactionsRepo: TransactionsRepository,
     private readonly validateBankAccountOwnershipService: ValidateBankAccountOwnershipService,
     private readonly validateCategoryOwnershipService: ValidateCategoryOwnershipService,
-    private readonly validateTransactionOwnershipService: ValidateTransactionOwnershipService
+    private readonly validateTransactionOwnershipService: ValidateTransactionOwnershipService,
   ) {}
 
   async create(userId: string, createTransactionDto: CreateTransactionDto) {
@@ -47,7 +46,7 @@ export class TransactionsService {
       year: number;
       bankAccountId?: string;
       type?: TransactionType;
-    }
+    },
   ) {
     return this.transactionsRepo.findMany({
       where: {
@@ -74,7 +73,7 @@ export class TransactionsService {
   async update(
     userId: string,
     transactionId: string,
-    updateTransactionDto: UpdateTransactionDto
+    updateTransactionDto: UpdateTransactionDto,
   ) {
     const { bankAccountId, categoryId, date, name, type, value } =
       updateTransactionDto;
@@ -124,12 +123,12 @@ export class TransactionsService {
       transactionId &&
         this.validateTransactionOwnershipService.validate(
           userId,
-          transactionId
+          transactionId,
         ),
       bankAccountId &&
         this.validateBankAccountOwnershipService.validate(
           userId,
-          bankAccountId
+          bankAccountId,
         ),
       categoryId &&
         this.validateCategoryOwnershipService.validate(userId, categoryId),

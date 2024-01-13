@@ -1,5 +1,6 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { CategoriesRepository } from "../../../shared/database/repositories/categories.repositories";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { CategoriesRepository } from 'src/shared/database/repositories/categories.repositories';
+
 @Injectable()
 export class ValidateCategoryOwnershipService {
   constructor(private readonly categoriesRepo: CategoriesRepository) {}
@@ -10,7 +11,7 @@ export class ValidateCategoryOwnershipService {
     });
 
     if (!isOwner) {
-      throw new NotFoundException("Category not found");
+      throw new NotFoundException('Category not found.');
     }
   }
 }

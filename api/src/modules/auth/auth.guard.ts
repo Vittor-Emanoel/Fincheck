@@ -3,12 +3,12 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { Reflector } from "@nestjs/core";
-import { JwtService } from "@nestjs/jwt";
-import { Request } from "express";
-import { env } from "../../shared/config/env";
-import { IS_PUBLIC_KEY } from "../../shared/decorators/IsPublic";
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { Request } from 'express';
+import { env } from 'src/shared/config/env';
+import { IS_PUBLIC_KEY } from 'src/shared/decorators/IsPublic';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -25,11 +25,10 @@ export class AuthGuard implements CanActivate {
     }
 
     const request = context.switchToHttp().getRequest();
-
     const token = this.extractTokenFromHeader(request);
 
     if (!token) {
-      throw new UnauthorizedException("Missing access token.");
+      throw new UnauthorizedException('Missing access token.');
     }
 
     try {
@@ -37,17 +36,17 @@ export class AuthGuard implements CanActivate {
         secret: env.jwtSecret,
       });
 
-      request["userId"] = payload.sub;
+      request['userId'] = payload.sub;
     } catch {
-      throw new UnauthorizedException("Invalid access token.");
+      throw new UnauthorizedException('Invalid access token.');
     }
 
     return true;
   }
 
   private extractTokenFromHeader(request: Request): string | undefined {
-    const [type, token] = request.headers.authorization?.split(" ") ?? [];
+    const [type, token] = request.headers.authorization?.split(' ') ?? [];
 
-    return type === "Bearer" ? token : undefined;
+    return type === 'Bearer' ? token : undefined;
   }
 }

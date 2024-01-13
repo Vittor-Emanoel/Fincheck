@@ -2,19 +2,18 @@ import {
   ConflictException,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { UsersRepository } from "../../shared/database/repositories/users.repositories";
-
-import { JwtService } from "@nestjs/jwt";
-import { compare, hash } from "bcryptjs";
-import { SigninDto } from "./dto/signin";
-import { SignupDto } from "./dto/signup";
+} from '@nestjs/common';
+import { UsersRepository } from 'src/shared/database/repositories/users.repositories';
+import { compare, hash } from 'bcryptjs';
+import { JwtService } from '@nestjs/jwt';
+import { SigninDto } from './dto/signin';
+import { SignupDto } from './dto/signup';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersRepo: UsersRepository,
-    private readonly jwtService: JwtService
+    private readonly jwtService: JwtService,
   ) {}
 
   async signin(signinDto: SigninDto) {
@@ -25,13 +24,13 @@ export class AuthService {
     });
 
     if (!user) {
-      throw new UnauthorizedException("Invalid credentials.");
+      throw new UnauthorizedException('Invalid credentials.');
     }
 
     const isPasswordValid = await compare(password, user.password);
 
     if (!isPasswordValid) {
-      throw new UnauthorizedException("Invalid credentials.");
+      throw new UnauthorizedException('Invalid credentials.');
     }
 
     const accessToken = await this.generateAccessToken(user.id);
@@ -48,7 +47,7 @@ export class AuthService {
     });
 
     if (emailTaken) {
-      throw new ConflictException("This email is already in use.");
+      throw new ConflictException('This email is already in use.');
     }
 
     const hashedPassword = await hash(password, 12);
@@ -62,19 +61,19 @@ export class AuthService {
           createMany: {
             data: [
               // Income
-              { name: "Salário", icon: "salary", type: "INCOME" },
-              { name: "Freelance", icon: "freelance", type: "INCOME" },
-              { name: "Outro", icon: "other", type: "INCOME" },
+              { name: 'Salário', icon: 'salary', type: 'INCOME' },
+              { name: 'Freelance', icon: 'freelance', type: 'INCOME' },
+              { name: 'Outro', icon: 'other', type: 'INCOME' },
               // Expense
-              { name: "Casa", icon: "home", type: "EXPENSE" },
-              { name: "Alimentação", icon: "food", type: "EXPENSE" },
-              { name: "Educação", icon: "education", type: "EXPENSE" },
-              { name: "Lazer", icon: "fun", type: "EXPENSE" },
-              { name: "Mercado", icon: "grocery", type: "EXPENSE" },
-              { name: "Roupas", icon: "clothes", type: "EXPENSE" },
-              { name: "Transporte", icon: "transport", type: "EXPENSE" },
-              { name: "Viagem", icon: "travel", type: "EXPENSE" },
-              { name: "Outro", icon: "other", type: "EXPENSE" },
+              { name: 'Casa', icon: 'home', type: 'EXPENSE' },
+              { name: 'Alimentação', icon: 'food', type: 'EXPENSE' },
+              { name: 'Educação', icon: 'education', type: 'EXPENSE' },
+              { name: 'Lazer', icon: 'fun', type: 'EXPENSE' },
+              { name: 'Mercado', icon: 'grocery', type: 'EXPENSE' },
+              { name: 'Roupas', icon: 'clothes', type: 'EXPENSE' },
+              { name: 'Transporte', icon: 'transport', type: 'EXPENSE' },
+              { name: 'Viagem', icon: 'travel', type: 'EXPENSE' },
+              { name: 'Outro', icon: 'other', type: 'EXPENSE' },
             ],
           },
         },

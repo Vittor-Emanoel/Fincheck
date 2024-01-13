@@ -1,34 +1,34 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
+  Post,
+  Body,
+  Param,
+  Delete,
+  Put,
+  ParseUUIDPipe,
   HttpCode,
   HttpStatus,
-  Param,
-  ParseIntPipe,
-  ParseUUIDPipe,
-  Post,
-  Put,
   Query,
-} from "@nestjs/common";
-import { CreateTransactionDto } from "./dto/create-transaction.dto";
-import { UpdateTransactionDto } from "./dto/update-transaction.dto";
-import { TransactionsService } from "./services/transactions.service";
+  ParseIntPipe,
+  ParseEnumPipe,
+} from '@nestjs/common';
+import { TransactionsService } from './services/transactions.service';
+import { CreateTransactionDto } from './dto/create-transaction.dto';
+import { UpdateTransactionDto } from './dto/update-transaction.dto';
+import { ActiveUserId } from 'src/shared/decorators/ActiveUserId';
+import { OptionalParseUUIDPipe } from 'src/shared/pipes/OptionalParseUUIDPipe';
+import { TransactionType } from './entities/Transaction';
+import { OptionalParseEnumPipe } from 'src/shared/pipes/OptionalParseEnumPipe';
 
-import { ActiveUserId } from "../../shared/decorators/ActiveUserid";
-import { OptionalParseEnumPipe } from "../../shared/pipes/OptionalParseEnumPipe";
-import { OptionalParseUUIDPipe } from "../../shared/pipes/OptionalParseUUIDPipe";
-import { TransactionType } from "./entities/Transaction";
-
-@Controller("transactions")
+@Controller('transactions')
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
   @Post()
   create(
     @ActiveUserId() userId: string,
-    @Body() createTransactionDto: CreateTransactionDto
+    @Body() createTransactionDto: CreateTransactionDto,
   ) {
     return this.transactionsService.create(userId, createTransactionDto);
   }
@@ -36,11 +36,11 @@ export class TransactionsController {
   @Get()
   findAll(
     @ActiveUserId() userId: string,
-    @Query("month", ParseIntPipe) month: number,
-    @Query("year", ParseIntPipe) year: number,
-    @Query("bankAccountId", OptionalParseUUIDPipe) bankAccountId?: string,
-    @Query("type", new OptionalParseEnumPipe(TransactionType))
-    type?: TransactionType
+    @Query('month', ParseIntPipe) month: number,
+    @Query('year', ParseIntPipe) year: number,
+    @Query('bankAccountId', OptionalParseUUIDPipe) bankAccountId?: string,
+    @Query('type', new OptionalParseEnumPipe(TransactionType))
+    type?: TransactionType,
   ) {
     return this.transactionsService.findAllByUserId(userId, {
       month,
@@ -50,24 +50,24 @@ export class TransactionsController {
     });
   }
 
-  @Put(":transactionId")
+  @Put(':transactionId')
   update(
     @ActiveUserId() userId: string,
-    @Param("transactionId", ParseUUIDPipe) transactionId: string,
-    @Body() updateTransactionDto: UpdateTransactionDto
+    @Param('transactionId', ParseUUIDPipe) transactionId: string,
+    @Body() updateTransactionDto: UpdateTransactionDto,
   ) {
     return this.transactionsService.update(
       userId,
       transactionId,
-      updateTransactionDto
+      updateTransactionDto,
     );
   }
 
-  @Delete(":transactionId")
+  @Delete(':transactionId')
   @HttpCode(HttpStatus.NO_CONTENT)
   remove(
     @ActiveUserId() userId: string,
-    @Param("transactionId", ParseUUIDPipe) transactionId: string
+    @Param('transactionId', ParseUUIDPipe) transactionId: string,
   ) {
     return this.transactionsService.remove(userId, transactionId);
   }
