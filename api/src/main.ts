@@ -5,15 +5,15 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   app.useGlobalPipes(new ValidationPipe());
 
   app.enableCors({
-    origin: '*',
+    origin: 'https://fincheck-cloud.vercel.app/',
   });
 
-  await app.listen(3000);
+  await app.listen(3333);
 }
 
 bootstrap();
