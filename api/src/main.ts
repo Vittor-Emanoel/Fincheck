@@ -8,6 +8,10 @@ async function bootstrap() {
 
   app.useGlobalPipes(new ValidationPipe());
 
+  app.enableCors({
+    origin: "https://fincheck-cloud.vercel.app/",
+  });
+
   await app.listen(3333);
 }
 bootstrap();
