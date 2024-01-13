@@ -5,11 +5,11 @@ import { LaunchScreen } from "../../view/components/LaunchScreen";
 import { localStorageKeys } from "../config/localStorageKeys";
 import { usersService } from "../services/usersService";
 
-import { UserData } from "../entities/User";
+import { User } from "../entities/User";
 
 interface AuthContextValue {
   signedIn: boolean;
-  user?: UserData;
+  user: User;
   signin(accessToken: string): void;
   signout(): void;
 }
