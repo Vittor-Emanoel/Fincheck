@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { useDashboard } from "../../../DashboardContext/useDashBoard";
+import { toast } from "react-hot-toast";
 import { z } from "zod";
 import { useBankAccounts } from "../../../../../../app/hooks/useBankAccounts";
 import { useCategories } from "../../../../../../app/hooks/useCategories";
-import { useMemo } from "react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionsService } from "../../../../../../app/services/transactionsService";
-import { toast } from "react-hot-toast";
 import { currencyStringToNumber } from "../../../../../../app/utils/currencyStringToNumber";
+import { useDashboard } from "../../../DashboardContext/useDashBoard";
 
 const schema = z.object({
   value: z.string().nonempty("Informe o valor"),
@@ -41,7 +41,15 @@ export function useNewTransactionModalController() {
 
   const { accounts } = useBankAccounts();
   const { categories: categoriesList } = useCategories();
-  const { isLoading, mutateAsync } = useMutation(transactionsService.create);
+  const { isPending: isLoading, mutateAsync } = useMutation(
+    {
+      mutationFn: transactionsService.create,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      },
+    }
+  );
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {

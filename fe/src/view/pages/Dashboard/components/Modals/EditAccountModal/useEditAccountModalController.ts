@@ -1,12 +1,12 @@
-import { z } from "zod";
-import { useDashboard } from "../../../DashboardContext/useDashBoard";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 import { bankAccountsService } from "../../../../../../app/services/bankAccountsService";
 import { currencyStringToNumber } from "../../../../../../app/utils/currencyStringToNumber";
-import { toast } from "react-hot-toast";
-import { useState } from "react";
+import { useDashboard } from "../../../DashboardContext/useDashBoard";
 
 const schema = z.object({
   initialBalance: z.union([
@@ -43,12 +43,34 @@ export function useEditAccountModalController() {
 
   const queryClient = useQueryClient();
 
-  const { isLoading, mutateAsync: updateAccount } = useMutation(
-    bankAccountsService.update
+  const { isPending: isLoading, mutateAsync: updateAccount } = useMutation(
+   {
+    mutationFn: bankAccountsService.update,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      toast.success("A Conta foi editada com sucesso!");
+      closeEditAccountModal();
+    },
+    onError: () => {
+      toast.error("Erro ao editar a conta!");
+    },
+   }
   );
 
-  const { isLoading: isLoadingDelete, mutateAsync: removeAccount } =
-    useMutation(bankAccountsService.remove);
+  const { isPending: isLoadingDelete, mutateAsync: removeAccount } =
+    useMutation(
+      {
+        mutationFn: bankAccountsService.remove,
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+          toast.success("A Conta foi deletada com sucesso!");
+          closeEditAccountModal();
+        },
+        onError: () => {
+          toast.error("Erro ao deletar a conta!");
+        },
+      }
+    );
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {

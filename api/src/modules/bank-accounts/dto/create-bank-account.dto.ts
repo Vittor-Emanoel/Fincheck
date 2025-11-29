@@ -1,9 +1,12 @@
+import { BankAccountPermission } from '@prisma/client';
 import {
-  IsEnum,
-  IsHexColor,
-  IsNotEmpty,
-  IsNumber,
-  IsString,
+    IsEmail,
+    IsEnum,
+    IsHexColor,
+    IsNotEmpty,
+    IsNumber,
+    IsOptional,
+    IsString,
 } from 'class-validator';
 import { BankAccountType } from '../entities/BankAccount';
 
@@ -24,4 +27,13 @@ export class CreateBankAccountDto {
   @IsNotEmpty()
   @IsHexColor()
   color: string;
+
+  @IsString()
+  @IsOptional()
+  @IsEmail()
+  shareWithEmail?: string;
+
+  @IsOptional()
+  @IsEnum(BankAccountPermission)
+  permission?: BankAccountPermission;
 }

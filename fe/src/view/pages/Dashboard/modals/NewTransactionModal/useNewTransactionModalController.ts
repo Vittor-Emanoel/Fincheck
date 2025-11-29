@@ -41,9 +41,17 @@ export function useNewTransactionModalController() {
   const { accounts } = useBankAccounts();
   const { categories: categoriesList } = useCategories();
   const {
-    isLoading,
+    isPending: isLoading,
     mutateAsync,
-  } = useMutation(transactionsService.create);
+  } = useMutation(
+    {
+      mutationFn: transactionsService.create,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      },
+    }
+  );
 
   const handleSubmit = hookFormSubmit(async data => {
     try {
@@ -53,9 +61,7 @@ export function useNewTransactionModalController() {
         type: newTransactionType!,
         date: data.date.toISOString(),
       });
-
-      queryClient.invalidateQueries({ queryKey: ['transactions'] });
-      queryClient.invalidateQueries({ queryKey: ['bankAccounts'] });
+      
       toast.success(
         newTransactionType === 'EXPENSE'
           ? 'Despesa cadastrada com sucesso!'

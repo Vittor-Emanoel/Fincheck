@@ -1,6 +1,7 @@
 import { create } from './create';
 import { getAll } from './getAll';
 import { remove } from './remove';
+import { share } from './share';
 import { update } from './update';
 
 export const bankAccountsService = {
@@ -8,4 +9,5 @@ export const bankAccountsService = {
   getAll,
   update,
   remove,
+  share,
 };

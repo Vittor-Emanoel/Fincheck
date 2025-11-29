@@ -47,13 +47,29 @@ export function useEditTransactionModalController(
   const { categories: categoriesList } = useCategories();
   const queryClient = useQueryClient();
   const {
-    isLoading,
+    isPending: isLoading,
     mutateAsync: updateTransaction,
-  } = useMutation(transactionsService.update);
+  } = useMutation(
+    {
+      mutationFn: transactionsService.update,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      },
+    }
+  );
   const {
-    isLoading: isLoadingDelete,
+    isPending: isLoadingDelete,
     mutateAsync: removeTransaction,
-  } = useMutation(transactionsService.remove);
+  } = useMutation(
+    {
+      mutationFn: transactionsService.remove,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      },
+    }
+  );
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 

@@ -1,5 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
@@ -12,6 +13,12 @@ const schema = z.object({
   name: z.string().nonempty('Nome da Conta é obrigatório'),
   type: z.enum(['CHECKING', 'INVESTMENT', 'CASH']),
   color: z.string().nonempty('Cor é obrigatória'),
+  shareWithEmail: z
+    .string()
+    .email('E-mail inválido')
+    .optional()
+    .or(z.literal('')),
+  permission: z.enum(['VIEW', 'EDIT']).optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -21,6 +28,8 @@ export function useNewAccountModalController() {
     isNewAccountModalOpen,
     closeNewAccountModal,
   } = useDashboard();
+
+  const [isShared, setIsShared] = useState(false);
 
   const {
     register,
@@ -33,17 +42,30 @@ export function useNewAccountModalController() {
   });
 
   const queryClient = useQueryClient();
-  const { isLoading, mutateAsync } = useMutation(bankAccountsService.create);
+  const { isPending: isLoading, mutateAsync } = useMutation(
+    {
+      mutationFn: bankAccountsService.create,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+        toast.success("Conta foi cadastrada com sucesso!");
+        closeNewAccountModal();
+        reset();
+      },
+      onError: () => {
+        toast.error("Erro ao cadastrar a conta!");
+      },
+    }
+  );
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
       await mutateAsync({
         ...data,
         initialBalance: currencyStringToNumber(data.initialBalance),
+        shareWithEmail: data.shareWithEmail || undefined,
+        permission: data.permission,
       });
 
-      queryClient.invalidateQueries({ queryKey: ['bankAccounts'] });
-      toast.success('Conta foi cadastrada com sucesso!');
       closeNewAccountModal();
       reset();
     } catch {
@@ -59,5 +81,7 @@ export function useNewAccountModalController() {
     handleSubmit,
     control,
     isLoading,
+    isShared,
+    setIsShared,
   };
 }

@@ -25,6 +25,11 @@ export function AccountCard({ data }: AccountCardProps) {
 
         <span className="text-gray-800 font-medium tracking-[-0.5px] mt-4 block">
           {name}
+          {data.isShared && (
+            <span className="ml-2 text-xs bg-teal-100 text-teal-900 px-2 py-0.5 rounded-full">
+              Compartilhada ({data.permission === 'VIEW' ? 'Visualizar' : 'Editar'})
+            </span>
+          )}
         </span>
       </div>
 

@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ValidateBankAccountAccessService } from 'src/modules/bank-accounts/services/validate-bank-account-access.service';
 import { ValidateBankAccountOwnershipService } from 'src/modules/bank-accounts/services/validate-bank-account-ownership.service';
 import { ValidateCategoryOwnershipService } from 'src/modules/categories/services/validate-category-ownership.service';
 import { TransactionsRepository } from 'src/shared/database/repositories/transactions.repository';
@@ -14,6 +15,7 @@ export class TransactionsService {
     private readonly validateBankAccountOwnershipService: ValidateBankAccountOwnershipService,
     private readonly validateCategoryOwnershipService: ValidateCategoryOwnershipService,
     private readonly validateTransactionOwnershipService: ValidateTransactionOwnershipService,
+    private readonly validateBankAccountAccessService: ValidateBankAccountAccessService,
   ) {}
 
   async create(userId: string, createTransactionDto: CreateTransactionDto) {
@@ -39,7 +41,7 @@ export class TransactionsService {
     });
   }
 
-  findAllByUserId(
+  async findAllByUserId(
     userId: string,
     filters: {
       month: number;
@@ -48,16 +50,27 @@ export class TransactionsService {
       type?: TransactionType;
     },
   ) {
-    return this.transactionsRepo.findMany({
-      where: {
-        userId,
-        bankAccountId: filters.bankAccountId,
-        type: filters.type,
-        date: {
-          gte: new Date(Date.UTC(filters.year, filters.month)),
-          lt: new Date(Date.UTC(filters.year, filters.month + 1)),
-        },
+    const where: any = {
+      bankAccountId: filters.bankAccountId,
+      type: filters.type,
+      date: {
+        gte: new Date(Date.UTC(filters.year, filters.month)),
+        lt: new Date(Date.UTC(filters.year, filters.month + 1)),
       },
+    };
+
+    if (filters.bankAccountId) {
+      await this.validateBankAccountAccessService.validate(
+        userId,
+        filters.bankAccountId,
+        'VIEW',
+      );
+    } else {
+      where.userId = userId;
+    }
+
+    return this.transactionsRepo.findMany({
+      where,
       include: {
         category: {
           select: {
@@ -126,9 +139,10 @@ export class TransactionsService {
           transactionId,
         ),
       bankAccountId &&
-        this.validateBankAccountOwnershipService.validate(
+        this.validateBankAccountAccessService.validate(
           userId,
           bankAccountId,
+          'EDIT',
         ),
       categoryId &&
         this.validateCategoryOwnershipService.validate(userId, categoryId),

@@ -1,17 +1,18 @@
 import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Param,
-  ParseUUIDPipe,
-  Post,
-  Put,
+    Body,
+    Controller,
+    Delete,
+    Get,
+    HttpCode,
+    HttpStatus,
+    Param,
+    ParseUUIDPipe,
+    Post,
+    Put
 } from '@nestjs/common';
 import { ActiveUserId } from '../../shared/decorators/ActiveUserId';
 import { CreateBankAccountDto } from './dto/create-bank-account.dto';
+import { ShareBankAccountDto } from './dto/share-bank-account.dto';
 import { UpdateBankAccountDto } from './dto/update-bank-account.dto';
 import { BankAccountsService } from './services/bank-accounts.service';
 
@@ -53,5 +54,19 @@ export class BankAccountsController {
     bankAccountId: string,
   ) {
     return this.bankAccountsService.remove(userId, bankAccountId);
+  }
+
+  @Post(':bankAccountId/share')
+  @HttpCode(HttpStatus.NO_CONTENT)
+  share(
+    @ActiveUserId() userId: string,
+    @Param('bankAccountId', ParseUUIDPipe) bankAccountId: string,
+    @Body() shareBankAccountDto: ShareBankAccountDto,
+  ) {
+    return this.bankAccountsService.share(
+      userId,
+      bankAccountId,
+      shareBankAccountDto,
+    );
   }
 }

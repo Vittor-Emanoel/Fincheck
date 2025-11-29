@@ -1,11 +1,12 @@
 import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
+    ConflictException,
+    Injectable,
+    UnauthorizedException,
 } from '@nestjs/common';
-import { UsersRepository } from 'src/shared/database/repositories/users.repositories';
-import { compare, hash } from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+import { compare, hash } from 'bcryptjs';
+import { BankAccountSharesRepository } from 'src/shared/database/repositories/bank-account-shares.repositories';
+import { UsersRepository } from 'src/shared/database/repositories/users.repositories';
 import { SigninDto } from './dto/signin';
 import { SignupDto } from './dto/signup';
 
@@ -13,6 +14,7 @@ import { SignupDto } from './dto/signup';
 export class AuthService {
   constructor(
     private readonly usersRepo: UsersRepository,
+    private readonly bankAccountSharesRepo: BankAccountSharesRepository,
     private readonly jwtService: JwtService,
   ) {}
 
@@ -78,6 +80,11 @@ export class AuthService {
           },
         },
       },
+    });
+
+    await this.bankAccountSharesRepo.updateMany({
+      where: { email },
+      data: { userId: user.id },
     });
 
     const accessToken = await this.generateAccessToken(user.id);

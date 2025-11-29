@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { useDashboard } from "../../../DashboardContext/useDashBoard";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
+import { z } from "zod";
 import { bankAccountsService } from "../../../../../../app/services/bankAccountsService";
 import { currencyStringToNumber } from "../../../../../../app/utils/currencyStringToNumber";
-import { toast } from "react-hot-toast";
+import { useDashboard } from "../../../DashboardContext/useDashBoard";
 
 const schema = z.object({
   initialBalance: z.string().nonempty("Saldo inicial é obrigatório"),
@@ -34,7 +34,14 @@ export function useNewAccountModalController() {
 
   const queryClient = useQueryClient();
 
-  const { isLoading, mutateAsync } = useMutation(bankAccountsService.create);
+  const { isPending: isLoading, mutateAsync } = useMutation(
+    {
+      mutationFn: bankAccountsService.create,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      },
+    }
+  );
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {

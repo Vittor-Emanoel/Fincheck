@@ -5,4 +5,6 @@ export interface BankAccount {
   type: 'CHECKING' | 'INVESTMENT' | 'CASH';
   color: string;
   currentBalance: number;
+  isShared?: boolean;
+  permission?: 'VIEW' | 'EDIT';
 }

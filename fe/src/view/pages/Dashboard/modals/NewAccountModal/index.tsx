@@ -16,6 +16,8 @@ export function NewAccountModal() {
     register,
     control,
     isLoading,
+    isShared,
+    setIsShared,
   } = useNewAccountModalController();
 
   return (
@@ -93,6 +95,48 @@ export function NewAccountModal() {
               />
             )}
           />
+
+          <div className="flex items-center gap-2 mt-2">
+            <input
+              type="checkbox"
+              id="isShared"
+              checked={isShared}
+              onChange={(e) => setIsShared(e.target.checked)}
+              className="w-4 h-4 text-teal-900 rounded border-gray-300 focus:ring-teal-900"
+            />
+            <label htmlFor="isShared" className="text-gray-700 text-sm">
+              Compartilhar conta?
+            </label>
+          </div>
+
+          {isShared && (
+            <>
+              <Input
+                type="email"
+                placeholder="E-mail do convidado"
+                error={errors.shareWithEmail?.message}
+                {...register('shareWithEmail')}
+              />
+
+              <Controller
+                control={control}
+                name="permission"
+                defaultValue="VIEW"
+                render={({ field: { onChange, value } }) => (
+                  <Select
+                    placeholder="Permissão"
+                    error={errors.permission?.message}
+                    onChange={onChange}
+                    value={value}
+                    options={[
+                      { value: 'VIEW', label: 'Visualizar' },
+                      { value: 'EDIT', label: 'Editar' },
+                    ]}
+                  />
+                )}
+              />
+            </>
+          )}
         </div>
 
         <Button type="submit" className="w-full mt-6" isLoading={isLoading}>

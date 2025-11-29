@@ -1,14 +1,14 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import { z } from "zod";
+import { Transaction } from "../../../../../../app/entities/Transaction";
 import { useBankAccounts } from "../../../../../../app/hooks/useBankAccounts";
 import { useCategories } from "../../../../../../app/hooks/useCategories";
-import { useMemo, useState } from "react";
-import { Transaction } from "../../../../../../app/entities/Transaction";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { transactionsService } from "../../../../../../app/services/transactionsService";
 import { currencyStringToNumber } from "../../../../../../app/utils/currencyStringToNumber";
-import { toast } from "react-hot-toast";
 
 const schema = z.object({
   value: z.union([z.string().nonempty("Informe o valor"), z.number()]),
@@ -45,11 +45,25 @@ export function useEditTransactionModalController(
 
   const queryClient = useQueryClient();
 
-  const { isLoading, mutateAsync: updateTransaction } = useMutation(
-    transactionsService.update
+  const { isPending: isLoading, mutateAsync: updateTransaction } = useMutation(
+    {
+      mutationFn: transactionsService.update,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["transactions"] });
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      },
+    }
   );
-  const { isLoading: isLoadingDelete, mutateAsync: removeTransaction } =
-    useMutation(transactionsService.remove);
+  const { isPending: isLoadingDelete, mutateAsync: removeTransaction } =
+    useMutation(
+      {
+        mutationFn: transactionsService.remove,
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: ["transactions"] });
+          queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+        },
+      }
+    );
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 

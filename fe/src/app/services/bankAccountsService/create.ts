@@ -5,6 +5,8 @@ export interface CreateBankAccountParams {
 	initialBalance: number;
 	color: string;
 	type: 'CHECKING' | 'INVESTMENT' | 'CASH';
+  shareWithEmail?: string;
+  permission?: 'VIEW' | 'EDIT';
 }
 
 export async function create(params: CreateBankAccountParams) {

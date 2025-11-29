@@ -16,6 +16,12 @@ const schema = z.object({
   name: z.string().nonempty('Nome da Conta é obrigatório'),
   type: z.enum(['CHECKING', 'INVESTMENT', 'CASH']),
   color: z.string().nonempty('Cor é obrigatória'),
+  shareWithEmail: z
+    .string()
+    .email('E-mail inválido')
+    .optional()
+    .or(z.literal('')),
+  permission: z.enum(['VIEW', 'EDIT']).optional(),
 });
 
 type FormData = z.infer<typeof schema>;
@@ -43,16 +49,54 @@ export function useEditAccountModalController() {
   });
 
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isShared, setIsShared] = useState(false);
 
   const queryClient = useQueryClient();
   const {
-    isLoading,
+    isPending: isLoading,
     mutateAsync: updateAccount,
-  } = useMutation(bankAccountsService.update);
+  } = useMutation(
+    {
+      mutationFn: bankAccountsService.update,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+        toast.success("A Conta foi editada com sucesso!");
+        closeEditAccountModal();
+      },
+      onError: () => {
+        toast.error("Erro ao editar a conta!");
+      },
+    }
+  );
   const {
-    isLoading: isLoadingDelete,
+    isPending: isLoadingDelete,
     mutateAsync: removeAccount,
-  } = useMutation(bankAccountsService.remove);
+  } = useMutation(
+    {
+      mutationFn: bankAccountsService.remove,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+        toast.success("A Conta foi deletada com sucesso!");
+        closeEditAccountModal();
+      },
+      onError: () => {
+        toast.error("Erro ao deletar a conta!");
+      },
+    }
+  );
+
+  const { mutateAsync: shareAccount } = useMutation(
+    {
+      mutationFn: bankAccountsService.share,
+      onSuccess: () => {
+        toast.success("A Conta foi compartilhada com sucesso!");
+        setIsShared(true);
+      },
+      onError: () => {
+        toast.error("Erro ao compartilhar a conta!");
+      },
+    }
+  );
 
   const handleSubmit = hookFormSubmit(async (data) => {
     try {
@@ -61,6 +105,14 @@ export function useEditAccountModalController() {
         initialBalance: currencyStringToNumber(data.initialBalance),
         id: accountBeingEdited!.id,
       });
+
+      if (data.shareWithEmail && data.permission) {
+        await shareAccount({
+          bankAccountId: accountBeingEdited!.id,
+          email: data.shareWithEmail,
+          permission: data.permission,
+        });
+      }
 
       queryClient.invalidateQueries({ queryKey: ['bankAccounts'] });
       toast.success('A conta foi editada com sucesso!');
@@ -103,5 +155,7 @@ export function useEditAccountModalController() {
     handleCloseDeleteModal,
     handleDeleteAccount,
     isLoadingDelete,
+    isShared,
+    setIsShared,
   };
 }

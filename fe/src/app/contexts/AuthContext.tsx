@@ -22,9 +22,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return !!storedAccessToken;
   });
 
-  const { isError, isFetching, isSuccess, remove, data } = useQuery({
+  // const queryClient = useQueryClient();
+  const { isError, isFetching, isSuccess, data } = useQuery({
     queryKey: ['users', 'me'],
-    queryFn: () => usersService.me(),
+    queryFn: async () => await usersService.me(),
     enabled: signedIn,
     staleTime: Infinity,
   });
@@ -37,10 +38,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signout = useCallback(() => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
-    remove();
-
+    // queryClient.removeQueries({ queryKey: ['users', 'me'] });
     setSignedIn(false);
-  }, [remove]);
+  }, []);
 
   useEffect(() => {
     if (isError) {
