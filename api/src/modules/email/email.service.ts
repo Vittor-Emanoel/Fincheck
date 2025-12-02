@@ -13,14 +13,13 @@ export class EmailService {
   }
 
   async sendInvite(email: string, inviterName: string) {
-    //TODO: AJUSTAR ISSO AQUI!
-    const inviteLink = `http://localhost:5173/register?email=${email}`;
+    const inviteLink = `${process.env.WEB_HOST}/register?email=${email}`;
 
     const html = await render(
       React.createElement(InviteEmail, { inviterName, inviteLink }),
     );
     console.log('Generated HTML:', html);
-    
+
     try {
       await this.resend.emails.send({
         from: 'Fincheck <onboarding@resend.dev>',
