@@ -1,16 +1,16 @@
-version: '3'
+version: "3"
 
 services:
-  db:
-    image: postgres:14-alpine
+  api-db:
+    image: postgres
     environment:
       POSTGRES_USER: root
       POSTGRES_PASSWORD: root
       POSTGRES_DB: fincheck
     ports:
-      - '5432:5432'
+      - "5432:5432"
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - api-db:/var/lib/postgresql/data
 
 volumes:
-  pgdata:
+  api-db:
