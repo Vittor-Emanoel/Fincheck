@@ -23,8 +23,6 @@ export function EditAccountModal() {
     handleCloseDeleteModal,
     handleDeleteAccount,
     isLoadingDelete,
-    isShared,
-    setIsShared,
   } = useEditAccountModalController();
 
   if (isDeleteModalOpen) {

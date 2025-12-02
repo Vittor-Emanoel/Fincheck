@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { z } from "zod";
+import { BankAccount } from "../../../../../app/entities/BankAccount";
 import { bankAccountsService } from "../../../../../app/services/bankAccountsService";
 import { currencyStringToNumber } from "../../../../../app/utils/currencyStringToNumber";
 import { useDashboard } from "../../components/DashboardContext/useDashboard";
@@ -58,13 +59,36 @@ export function useEditAccountModalController() {
   } = useMutation(
     {
       mutationFn: bankAccountsService.update,
+      onMutate: async (updatedAccount) => {
+        await queryClient.cancelQueries({ queryKey: ['bankAccounts'] });
+
+        const previousAccounts = queryClient.getQueryData<BankAccount[]>(['bankAccounts']);
+
+        queryClient.setQueryData(['bankAccounts'], (old: BankAccount[] = []) => {
+          return old.map(account => {
+            if (account.id === updatedAccount.id) {
+              return {
+                ...account,
+                ...updatedAccount,
+              };
+            }
+            return account;
+          });
+        });
+
+        return { previousAccounts };
+      },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
-        toast.success("A Conta foi editada com sucesso!");
         closeEditAccountModal();
       },
-      onError: () => {
+      onError: (_err, _newAccount, context) => {
+        if (context?.previousAccounts) {
+          queryClient.setQueryData(['bankAccounts'], context.previousAccounts);
+        }
         toast.error("Erro ao editar a conta!");
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
       },
     }
   );
@@ -74,12 +98,28 @@ export function useEditAccountModalController() {
   } = useMutation(
     {
       mutationFn: bankAccountsService.remove,
+      onMutate: async (deletedAccountId) => {
+        await queryClient.cancelQueries({ queryKey: ['bankAccounts'] });
+
+        const previousAccounts = queryClient.getQueryData<BankAccount[]>(['bankAccounts']);
+
+        queryClient.setQueryData(['bankAccounts'], (old: BankAccount[] = []) => {
+          return old.filter(account => account.id !== deletedAccountId);
+        });
+
+        return { previousAccounts };
+      },
       onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
         closeEditAccountModal();
       },
-      onError: () => {
+      onError: (_err, _newAccount, context) => {
+        if (context?.previousAccounts) {
+          queryClient.setQueryData(['bankAccounts'], context.previousAccounts);
+        }
         toast.error("Erro ao deletar a conta!");
+      },
+      onSettled: () => {
+        queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
       },
     }
   );
@@ -112,8 +152,6 @@ export function useEditAccountModalController() {
           permission: data.permission,
         });
       }
-
-      queryClient.invalidateQueries({ queryKey: ['bankAccounts'] });
       toast.success('A conta foi editada com sucesso!');
       closeEditAccountModal();
     } catch {
@@ -132,8 +170,6 @@ export function useEditAccountModalController() {
   async function handleDeleteAccount() {
     try {
       await removeAccount(accountBeingEdited!.id);
-
-      queryClient.invalidateQueries({ queryKey: ['bankAccounts'] });
       toast.success('A conta foi deletada com sucesso!');
       closeEditAccountModal();
     } catch {

@@ -6,6 +6,7 @@ import { cn } from '../../../../../app/utils/cn';
 import { formatCurrency } from '../../../../../app/utils/formatCurrency';
 import { Spinner } from '../../../../components/Spinner';
 import { EyeIcon } from '../../../../components/icons/EyeIcon';
+import { GoalWidget } from '../GoalWidget';
 import { AccountCard } from './AccountCard';
 import { SliderNavigation } from './SliderNavigation';
 import { useAccountsController } from './useAccountsController';
@@ -55,6 +56,7 @@ export function Accounts() {
             </div>
           </div>
 
+          <GoalWidget />
           <div className="flex-1 flex flex-col justify-end mt-10 md:mt-0">
             {accounts.length === 0 && (
               <>

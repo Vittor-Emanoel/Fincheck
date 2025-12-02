@@ -61,7 +61,7 @@ export function useEditAccountModalController() {
       {
         mutationFn: bankAccountsService.remove,
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+          // queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
           closeEditAccountModal();
         },
         onError: () => {

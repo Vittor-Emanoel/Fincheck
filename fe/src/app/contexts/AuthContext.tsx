@@ -40,6 +40,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signout = useCallback(() => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
     queryClient.removeQueries({ queryKey: ['users', 'me'] });
+    queryClient.removeQueries({ queryKey: ['bankAccounts'] });
     setSignedIn(false);
   }, []);
 

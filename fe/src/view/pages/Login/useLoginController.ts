@@ -27,7 +27,7 @@ export function useLoginController() {
     resolver: zodResolver(schema),
   });
 
-  const { mutateAsync, isLoading } = useMutation({
+  const { mutateAsync, isPending: isLoading } = useMutation({
     mutationFn: async (data: SigninParams) => {
       return authService.signin(data);
     },

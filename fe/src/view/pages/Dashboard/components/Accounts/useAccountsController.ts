@@ -22,6 +22,8 @@ export function useAccountsController() {
     return accounts.reduce((total, account) => total + account.currentBalance, 0);
   }, [accounts]);
 
+
+  console.log(accounts, 'accounts')
   return {
     sliderState,
     setSliderState,

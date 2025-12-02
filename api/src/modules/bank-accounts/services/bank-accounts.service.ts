@@ -16,7 +16,7 @@ export class BankAccountsService {
     private readonly usersRepo: UsersRepository,
     private readonly emailService: EmailService,
     private readonly validateBankAccountOwnershipService: ValidateBankAccountOwnershipService,
-  ) {}
+  ) { }
 
   async create(userId: string, createBankAccountDto: CreateBankAccountDto) {
     const { color, initialBalance, name, type, shareWithEmail, permission } =
@@ -184,6 +184,9 @@ export class BankAccountsService {
 
     await this.bankAccountsRepo.delete({
       where: { id: bankAccountId },
+      include: {
+        goals: true,
+      }
     });
 
     return null;

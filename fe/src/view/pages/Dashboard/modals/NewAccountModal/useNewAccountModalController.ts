@@ -1,3 +1,4 @@
+import { BankAccount } from "@/app/entities/BankAccount";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -45,13 +46,28 @@ export function useNewAccountModalController() {
   const { isPending: isLoading, mutateAsync } = useMutation(
     {
       mutationFn: bankAccountsService.create,
+      onMutate: (variables) => {
+        
+      const tmpBankAccountId = String(Math.random());
+
+      queryClient.setQueryData<BankAccount[]>(['bankAccounts'], (old) =>
+        old?.concat({
+          ...variables,
+          id: tmpBankAccountId,
+          currentBalance: currencyStringToNumber(variables.initialBalance),
+          isShared: !!variables.shareWithEmail,
+          permission: variables.permission,
+        }),
+      );
+      return { tmpBankAccountId };
+      },
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
         toast.success("Conta foi cadastrada com sucesso!");
         closeNewAccountModal();
         reset();
       },
-      onError: () => {
+      onError: (error) => {
         toast.error("Erro ao cadastrar a conta!");
       },
     }
