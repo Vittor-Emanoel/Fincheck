@@ -11,9 +11,26 @@ export function GoalWidget() {
   const { nearestGoal, isLoading } = useNearestGoal();
   const { areValuesVisible } = useDashboard()
 
+
+  const percentage = useMemo(() => {
+    if (!nearestGoal?.targetValue) return 0;
+
+    return Math.min(
+      100,
+      Math.max(0, (nearestGoal.currentValue / nearestGoal.targetValue) * 100)
+    );
+  }, [nearestGoal]);
+
+  const remaining = nearestGoal ? nearestGoal.targetValue - nearestGoal.currentValue : 0;
+
+  const goalExpectedDate =
+    nearestGoal?.deadline &&
+    formatDate(new Date(nearestGoal.deadline));
+
+
   if (isLoading) {
     return (
-      <div className="bg-white rounded-2xl p-6 h-full flex items-center justify-center">
+      <div className="bg-white rounded-2xl p-6 h-[220px] mt-5 flex items-center justify-center">
         <Spinner className="w-6 h-6" />
       </div>
     );
@@ -21,7 +38,7 @@ export function GoalWidget() {
 
   if (!nearestGoal) {
     return (
-      <div className="bg-white rounded-2xl p-6 h-[200px] flex flex-col items-center justify-center gap-4 text-center">
+      <div className="bg-white rounded-2xl p-6 h-[220px] mt-5 flex flex-col items-center justify-center gap-4 text-center">
         <span className="text-gray-600 text-sm">Nenhuma meta em andamento.</span>
         <Link to="/goals" className="text-teal-900 font-medium text-sm hover:underline">
           Criar nova meta
@@ -30,20 +47,7 @@ export function GoalWidget() {
     );
   }
 
-  const percentage = useMemo(() => {
-    if (!nearestGoal.targetValue) return 0;
 
-    return Math.min(
-      100,
-      Math.max(0, (nearestGoal.currentValue / nearestGoal.targetValue) * 100)
-    );
-  }, [nearestGoal]);
-
-  const remaining = nearestGoal.targetValue - nearestGoal.currentValue;
-
-  const goalExpectedDate =
-    nearestGoal?.deadline &&
-    formatDate(new Date(nearestGoal.deadline));
 
 
   return (
