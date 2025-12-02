@@ -76,8 +76,6 @@ export function useEditTransactionModalController(
         value: currencyStringToNumber(data.value),
         date: data.date.toISOString(),
       });
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
       toast.success(
         transaction!.type === "EXPENSE"
           ? "Despesa editada com sucesso!"
@@ -102,8 +100,7 @@ export function useEditTransactionModalController(
   async function handleDeleteTransaction() {
     try {
       await removeTransaction(transaction!.id);
-      queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
+      
       toast.success(
         transaction!.type === "EXPENSE"
           ? "A despesa foi deletada com sucesso!"

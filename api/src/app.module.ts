@@ -1,13 +1,15 @@
 import { Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 
-import { DatabaseModule } from './shared/database/database.module';
-import { UsersModule } from './modules/users/users.module';
-import { AuthModule } from './modules/auth/auth.module';
 import { AuthGuard } from './modules/auth/auth.guard';
-import { CategoriesModule } from './modules/categories/categories.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { BankAccountsModule } from './modules/bank-accounts/bank-accounts.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { EmailModule } from './modules/email/email.module';
+import { GoalsModule } from './modules/goals/goals.module';
 import { TransactionsModule } from './modules/transactions/transactions.module';
+import { UsersModule } from './modules/users/users.module';
+import { DatabaseModule } from './shared/database/database.module';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { TransactionsModule } from './modules/transactions/transactions.module';
     CategoriesModule,
     BankAccountsModule,
     TransactionsModule,
+    EmailModule,
+    GoalsModule,
   ],
   controllers: [],
   providers: [

@@ -20,6 +20,7 @@ model User {
   categories   Category[]
   transactions Transaction[]
   bankAccountShares BankAccountShare[]
+  goals        Goal[]
 
   @@map("users")
 }
@@ -41,6 +42,7 @@ model BankAccount {
   color          String
   transactions   Transaction[]
   shares         BankAccountShare[]
+  goals          Goal[]
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -103,4 +105,18 @@ model BankAccountShare {
   user        User?       @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("bank_account_shares")
+}
+
+model Goal {
+  id            String       @id @default(uuid()) @db.Uuid
+  userId        String       @map("user_id") @db.Uuid
+  name          String
+  targetValue   Float        @map("target_value")
+  currentValue  Float        @map("current_value")
+  deadline      DateTime?
+
+  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  bankAccounts BankAccount[]
+
+  @@map("goals")
 }

@@ -76,7 +76,6 @@ export function useEditAccountModalController() {
       mutationFn: bankAccountsService.remove,
       onSuccess: () => {
         queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
-        toast.success("A Conta foi deletada com sucesso!");
         closeEditAccountModal();
       },
       onError: () => {

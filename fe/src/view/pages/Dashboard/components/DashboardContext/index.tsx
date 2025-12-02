@@ -1,3 +1,4 @@
+import { useBankAccounts } from "@/app/hooks/useBankAccounts";
 import { createContext, useCallback, useState } from "react";
 import { BankAccount } from "../../../../../app/entities/BankAccount";
 
@@ -13,6 +14,7 @@ interface DashboardContextValue {
   closeNewTransactionModal(): void;
   isEditAccountModalOpen: boolean;
   accountBeingEdited: null | BankAccount;
+  hasBankAccounts: boolean;
   openEditAccountModal(bankAccount: BankAccount): void;
   closeEditAccountModal(): void;
 }
@@ -26,6 +28,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
   const [newTransactionType, setNewTransactionType] = useState<'INCOME' | 'EXPENSE' | null>(null);
   const [isEditAccountModalOpen, setIsEditAccountModalOpen] = useState(false);
   const [accountBeingEdited, setAccountBeingEdited] = useState<null | BankAccount>(null);
+  const { accounts } = useBankAccounts()
 
   const toggleValuesVisibility = useCallback(() => {
     setAreValuesVisible(prevState => !prevState);
@@ -59,6 +62,8 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
     setIsEditAccountModalOpen(false);
   }, []);
 
+  const hasBankAccounts = accounts.length > 0;
+
   return (
     <DashboardContext.Provider
       value={{
@@ -75,6 +80,7 @@ export function DashboardProvider({ children }: { children: React.ReactNode }) {
         accountBeingEdited,
         openEditAccountModal,
         closeEditAccountModal,
+        hasBankAccounts,
       }}
     >
       {children}

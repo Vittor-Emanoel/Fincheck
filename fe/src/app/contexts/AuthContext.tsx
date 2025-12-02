@@ -1,4 +1,4 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { createContext, useCallback, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { LaunchScreen } from "../../view/components/LaunchScreen";
@@ -22,7 +22,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return !!storedAccessToken;
   });
 
-  // const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
+
   const { isError, isFetching, isSuccess, data } = useQuery({
     queryKey: ['users', 'me'],
     queryFn: async () => await usersService.me(),
@@ -38,7 +39,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signout = useCallback(() => {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
-    // queryClient.removeQueries({ queryKey: ['users', 'me'] });
+    queryClient.removeQueries({ queryKey: ['users', 'me'] });
     setSignedIn(false);
   }, []);
 

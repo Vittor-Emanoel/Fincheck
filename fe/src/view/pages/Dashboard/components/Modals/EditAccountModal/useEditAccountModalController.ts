@@ -48,7 +48,6 @@ export function useEditAccountModalController() {
     mutationFn: bankAccountsService.update,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
-      toast.success("A Conta foi editada com sucesso!");
       closeEditAccountModal();
     },
     onError: () => {
@@ -63,7 +62,6 @@ export function useEditAccountModalController() {
         mutationFn: bankAccountsService.remove,
         onSuccess: () => {
           queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
-          toast.success("A Conta foi deletada com sucesso!");
           closeEditAccountModal();
         },
         onError: () => {
@@ -80,7 +78,6 @@ export function useEditAccountModalController() {
         id: accountBeingEdited!.id,
       });
 
-      queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
       toast.success("A Conta foi editada com sucesso!");
       closeEditAccountModal();
     } catch (error) {
@@ -99,9 +96,7 @@ export function useEditAccountModalController() {
   async function handleDeleteAccount() {
     try {
       await removeAccount(accountBeingEdited!.id);
-
-      queryClient.invalidateQueries({ queryKey: ["bankAccounts"] });
-      toast.success("A Conta foi deletada com' sucesso!");
+      toast.success("A Conta foi deletada com sucesso!");
       closeEditAccountModal();
     } catch (error) {
       toast.error("Erro ao deletar a conta!");

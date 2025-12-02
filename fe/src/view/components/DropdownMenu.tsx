@@ -43,14 +43,16 @@ interface DropdownMenuItemProps {
   children: React.ReactNode;
   className?: string;
   onSelect?(): void;
+  disabled?: boolean
 }
 
-function DropdownMenuItem({ children, className, onSelect }: DropdownMenuItemProps) {
+function DropdownMenuItem({ children, className, disabled, onSelect }: DropdownMenuItemProps) {
   return (
     <RdxDropdownMenu.Item
       onSelect={onSelect}
+      disabled={disabled}
       className={cn(
-        'min-h-[40px] outline-none flex items-center py-2 px-4 text-gray-800 text-sm data-[highlighted]:bg-gray-50 rounded-2xl transition-colors cursor-pointer',
+        'min-h-[40px] outline-none flex items-center py-2 px-4 text-gray-800 text-sm data-[highlighted]:bg-gray-50 rounded-2xl transition-colors cursor-pointer data-[disabled]:opacity-50 data-[disabled]:cursor-not-allowed',
         className,
       )}
     >
